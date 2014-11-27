@@ -1,0 +1,73 @@
+<head>
+  <title>Comic Database</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Comic Database</h1>
+    </header>
+    <div>
+
+    </div>
+    <div id="newHeroForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+    	{{> newComic}}
+   </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</body>
+<template name="allComics">
+	<ul>
+		{{#each comic}}
+			<li>
+				<a href="">{{publisher}}</a>
+			</li>
+		{{/each}}
+	</ul>
+</template>
+<template name="home">
+	<ul>
+		<li><a href="/marvel">Marvel</a></li>
+		<li><a href="/dccomics">DC</a></li>
+	</ul>
+</template>
+<template name="newComic">
+	<form class="newSuperhero">
+    	<input type="text" name="publisher" placeholder="Publisher Name" />
+    	<br/><input type="text" name="superhero" placeholder="Superhero Name" />
+    	<br/><input type="text" name="movieName" placeholder="Movie Name" />
+    	<br/><input type="text" name="appearance" placeholder="First Appearance" />
+    	<div class="form-group">
+   			<label for="comicCoverImage">Upload Cover Art</label>
+   			<input type="file" id="comicCoverImage">
+ 		</div>
+    	<br/><input type="submit" name="submitNewHero" value="Add Superhero"/>
+	</form>
+</template>
+<template name="marvel">
+  {{#each comic}}
+    <a href="/marvel/herodetails/{{_id}}"><li>{{superhero}}</li></a>
+  {{/each}}
+	<button type="button" data-toggle="modal" data-target="#newHeroForm" class="newHeroButton">Add New Hero</button>
+</template>
+<template name="dccomics">
+  <button type="button" data-toggle="modal" data-target="#newHeroForm" class="newHeroButton">Add New Hero</button>
+</template>
+<template name="heroDetails">
+  <ul>
+    <li>{{superhero}}</li>
+    <li>{{appearance}}</li>
+  </ul>
+</template>
