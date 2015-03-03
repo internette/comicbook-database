@@ -1,0 +1,82 @@
+<head>
+  <title>Comicbook Database</title>
+  <link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+  <script src="http://use.typekit.net/tqj7qme.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+
+<body>
+</body>
+
+<template name="Home">
+  <div id="full-bg">
+    <img src=""/>
+  </div>
+  <div id="cont">
+    <div id="publisher-list">
+      <h1 class="title"><span>Publisher List</span><span class="directions">[ scroll down and pick a publisher ]</span></h1>
+      <div class="nav">
+      	<ul>
+      		{{#each publishers}}
+      			<li><a href="{{pathFor route='publisher' publisher=publisher}}">{{publisher}}</a></li>
+      		{{/each}}
+      	</ul>
+        </div>
+        <div class="button"><button type="button" data-toggle="modal" data-target="#newComicForm" class="newHeroButton">Add New Comic</button></div>
+      </div>
+      {{> popUpForm}}
+    </div>
+</template>
+
+<template name="Publisher">
+  <div id="full-bg">
+    <img src=""/>
+  </div>
+	<ul id="heroes">
+	{{#each hero}}
+		<li>
+      <a href="{{pathFor route='superhero' superhero=superhero}}">
+        <img src="{{heroHeadShot}}" class="grayscale"/>
+        <span>{{superhero}}</span>
+      </a>
+    </li>
+	{{/each}}
+	</ul>
+</template>
+<template name="NewComic">
+	<form class="newComic">
+    	<label for="publisher">Publisher: </label><input type="text" name="publisher" placeholder="Publisher Name" class="inputField" /><span class="required">Required</span>
+    	<label for="superhero">Superhero Name: </label><input type="text" name="superhero" placeholder="Superhero Name" class="inputField" /><span class="required">Required</span>
+      <label for="heroheadshot">Superhero Image: </label><input type="text" name="heroheadshot" placeholder="Image of the superhero's face" class="inputField"/><span class="required">Required</span>
+    	<label for="appearance">First Appearance: </label><input type="text" name="appearance" placeholder="First Appearance" class="inputField"/><span class="required">Required</span>
+      <a id="add-more" href="#">+Add Appearance</a>
+      <label for="coverImage">Image URL: </label><input type="text" name="coverImage" placeholder="e.g. Cover Art" class="inputField"/><span class="required">Required</span>
+      <label for="imgDescript">Image Description: </label><input type="text" name="imgDescript" placeholder="e.g. Cover for Issue #1" class="inputField"/><span class="required">Required</span>
+      <br/><input type="submit" name="submitNewHero" value="Add Superhero"/>
+	</form>
+</template>
+<template name="popUpForm">
+	 <div id="newComicForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> NewComic}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="Hero">
+	<ul>
+		<li>Superhero: {{superhero}}</li>
+		<li>Publisher: {{publisher}}</li>
+    <li>Addition Appearances: {{addApps}}</li>
+	</ul>
+</template>
