@@ -48,11 +48,8 @@
     	<label for="publisher">Publisher: </label><input type="text" name="publisher" placeholder="Publisher Name" class="inputField" /><span class="required">Required</span>
     	<label for="superhero">Superhero Name: </label><input type="text" name="superhero" placeholder="Superhero Name" class="inputField" /><span class="required">Required</span>
       <label for="heroheadshot">Superhero Image: </label><input type="text" name="heroheadshot" placeholder="Image of the superhero's face" class="inputField"/><span class="required">Required</span>
-    	<label for="appearance">First Appearance: </label><input type="text" name="appearance" placeholder="First Appearance" class="inputField"/><span class="required">Required</span>
-      <a id="add-more" href="#">+Add Appearance</a>
-      <label for="coverImage">Image URL: </label><input type="text" name="coverImage" placeholder="e.g. Cover Art" class="inputField"/><span class="required">Required</span>
       <label for="imgDescript">Image Description: </label><input type="text" name="imgDescript" placeholder="e.g. Cover for Issue #1" class="inputField"/><span class="required">Required</span>
-      <br/><input type="submit" name="submitNewHero" value="Add Superhero"/>
+      <input type="submit" name="submitNewHero" id="submit-new-hero" value="Add Superhero"/><button type="button" id="btn-close" class="btn btn-default" data-dismiss="modal">Close</button>
 	</form>
 </template>
 <template name="popUpForm">
@@ -66,9 +63,6 @@
       <div class="modal-body">
       {{> NewComic}}
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
 </div>
@@ -77,6 +71,9 @@
 	<ul>
 		<li>Superhero: {{superhero}}</li>
 		<li>Publisher: {{publisher}}</li>
-    <li>Addition Appearances: {{addApps}}</li>
+    <li><a href="{{pathFor route='appearancelist' superhero=superhero}}">View All Appearances</a></li>
 	</ul>
+</template>
+<template name="appearancelist">
+  <a href="">Add More Appearances</a>
 </template>
