@@ -1,74 +1,234 @@
-Comics = new Mongo.Collection('comics');
+Publishers = new Mongo.Collection('publishers');
+Heroes = new Mongo.Collection('heroes');
+Volumes = new Mongo.Collection('volumes');
+UserVolumes = new Mongo.Collection('user-volumes');
+var userArray = [];
 if (Meteor.isClient) {
   Template.Home.helpers({
     publishers: function(){
-      var makeIntoArray = Comics.find().fetch();
+      var makeIntoArray = Publishers.find().fetch();
       var uniqueArray = _.uniq(makeIntoArray, false, function(e){return e.publisher});
       return uniqueArray;
     }
   });
-  Template.Home.events({
-    'click .newHeroButton': function(){
-      $('#newComicForm').css({'z-index': '1000'});
+  Template.userChoices.events({
+    'click #signup-btn': function(){
+      $('#signUpForm').css({'z-index': '2000'});
+    },
+    'click #login-btn': function(){
+      $('#logInForm').css({'z-index': '2000'});
+    },
+    'click #logout-btn': function(){
+      $('#logOutForm').css({'z-index': '2000'});
     }
   });
-  Template.Home.rendered = function () {
-    var bgImgArray = ['marvel.jpg', 'marvel-2.jpg', 'marvel-3.jpg', 'dc-comics.jpg', 'dc-comics-2.jpg', 'dc-comics-3.jpg', 'dc-comics-women.jpg'];
-    var randImg = bgImgArray[Math.floor(Math.random() * bgImgArray.length)];
-    function returnImg (){
-      return randImg
+  Template.Home.events({
+    'click .newHeroButton': function(){
+      $('#newPublisherForm').css({'z-index': '2000'});
+    },
+    'mouseenter li': function(){
+      $('#full-bg').css({'background':'url('+Publishers.findOne({_id: this._id}).publisherImg+')', 'background-size': 'cover', 'background-position': 'center'});
+    },
+    'mouseleave li': function(){
+      $('#full-bg').css({'background':'gainsboro'});
     }
-    $('#full-bg img').attr({'src': '/'+returnImg()});
-  };
-  Template.Publisher.rendered = function () {
-    var bgImgArray = ['marvel.jpg', 'marvel-2.jpg', 'marvel-3.jpg', 'dc-comics.jpg', 'dc-comics-2.jpg', 'dc-comics-3.jpg', 'dc-comics-women.jpg'];
-    var randImg = bgImgArray[Math.floor(Math.random() * bgImgArray.length)];
-    function returnImg (){
-      return randImg
-    }
-    $('#full-bg img').attr({'src': '/'+returnImg()});
-  };
+  });
   Template.Publisher.helpers({
     hero:function(){
-      return Comics.find({});
+      var makeIntoArray = Heroes.find().fetch();
+      var uniqueArray = _.uniq(makeIntoArray, false, function(e){return e.heroName});
+      return uniqueArray;
     }
   });
   Template.Publisher.events({
-
+    'mouseenter li': function(){
+      $('#full-bg').css({'background':'url('+Heroes.findOne({_id: this._id}).heroImg+')', 'background-size': 'cover', 'background-position': 'top center'});
+    },
+    'mouseleave li': function(){
+      $('#full-bg').css({'background':'gainsboro'});
+    },
+    'click .newHeroButton': function(){
+      $('#newHeroForm').css({'z-index': '2000'});
+    }
   });
-  Template.Hero.helpers({
-
-  });
-  Template.NewComic.events({
+  Template.NewPublisher.events({
     'submit form': function(event){
       event.preventDefault();
       $('.newHeroButton').keyup(function(){
           this.value = this.value.toLowerCase();
       }); 
-      var addApps = [];
       var publisherVar = event.target.publisher.value.toLowerCase().replace(' ','');
-      var superheroVar = event.target.superhero.value;
-      var superheroImg = event.target.heroheadshot.value;
-      var coverImage = event.target.coverImage.value;
-      var imgDescript = event.target.imgDescript.value;
-      //addApps.push(event.target.appearance, $('.add-field').val());
-      $('.add-field').each(function(){
-        addApps.push($(this).val())
-      });
-      addApps.push(event.target.appearance.value);
-      Comics.insert({
+      var publisherImage = event.target.publisherimg.value;
+      if(Heroes.find({publisher: publisherVar}).count()>=1){
+        alert('this already exists');
+      } else{      
+        Publishers.insert({
         publisher: publisherVar,
-        superhero: superheroVar,
-        heroHeadShot: superheroImg,
-        coverImage: coverImage,
-        imgDescript: imgDescript,
-        addApps: addApps
-      });
-      $('#newComic').modal('hide')
+        publisherImg: publisherImage
+      });}
+      $('#newPublisherForm').modal('hide')
     },
-    'click #add-more': function(e){
+    'blur input': function(event){
+      if(event.target.value===''){
+        $(event.target).next('span').show();
+      }
+    },
+    'focus input': function(event){
+      $(event.target).next('span').hide();
+    },
+    "click a.close": function(e){
       e.preventDefault();
-      $('#add-more').before('<b class="faux-label">Appearance: </b><input class="inputField add-field" style="float: left; position: relative" type="text"/>');
+      $('form').modal('hide');
+    }
+  });
+  Template.NewHero.events({
+    'submit form': function(event){
+      event.preventDefault();
+      $('.newHeroButton').keyup(function(){
+          this.value = this.value.toLowerCase();
+      }); 
+      var publisherVar = window.location.href.split('/')[3];
+      var heroName = event.target.superhero.value.toLowerCase();
+      var heroImg = event.target.superheroimg.value;
+      var heroDetails = event.target.herodetails.value;
+      var heroRealName = event.target.herorealname.value;
+      if(Heroes.find({heroName: heroName}).count()===1){
+        alert('this already exists');
+      } else{
+        Heroes.insert({
+          publisher: publisherVar,
+          heroName: heroName,
+          heroImg: heroImg,
+          heroRealName: heroRealName,
+          heroDetails: heroDetails
+        });
+      }
+      $('#newHeroForm').modal('hide');
+    },
+    'blur input': function(event){
+      if(event.target.value===''){
+        $(event.target).next('span').show();
+      }
+    },
+    'focus input': function(event){
+      $(event.target).next('span').hide();
+    },    
+    "click a.close": function(e){
+      e.preventDefault();
+      $('form').modal('hide');
+    }
+  });
+Template.AllVolumes.helpers({
+  volumes: function(){
+    return Volumes.find();
+  }
+});
+Template.UserDetails.helpers({
+  volumes: function(){
+    return Meteor.user().comics
+  }
+});
+  Template.AllVolumes.events({
+    'submit form': function(event){
+      event.preventDefault();
+      $('.newHeroButton').keyup(function(){
+          this.value = this.value.toLowerCase();
+      }); 
+      var publisherVar = window.location.href.split('/')[3];
+      var heroName = window.location.href.split('/')[4];
+      var appearanceName = event.target.appearanceName.value;
+      var volNo = event.target.volNo.value;
+      var coverart = event.target.coverart.value;
+      var synopsis = event.target.synopsis.value;
+      if((Volumes.find({appearanceName: appearanceName, heroName: heroName}).count()>=1)){
+        alert('this already exists');
+      } else{
+        Volumes.insert({
+          publisher: publisherVar,
+          heroName: heroName,
+          appearanceName: appearanceName,
+          volNo: volNo,
+          coverart: coverart,
+          synopsis: synopsis,
+          owned: false
+        });
+      }
+      $('#newAppearanceForm').modal('hide');
+    },
+    'mouseenter li': function(){
+      $('#full-bg').css({'background':'url('+Volumes.findOne({_id: this._id}).coverart+')', 'background-size': 'cover', 'background-position': 'center'});
+    },
+    'mouseleave li': function(){
+      $('#full-bg').css({'background':'gainsboro'});
+    },
+    'blur input': function(event){
+      if(event.target.value===''){
+        $(event.target).next('span').show();
+      }
+    },
+    'focus input': function(event){
+      $(event.target).next('span').hide();
+    },  
+    "click a.close": function(e){
+      e.preventDefault();
+      $('form').modal('hide');
+    },
+    "click a.is-it-owned": function(event){
+      event.preventDefault();
+      if(this.owned===true){
+        Meteor.call('removeComic', this._id, this.appearanceName, this.volNo, function(error, user){console.log(user.comics)});
+        Volumes.update(this._id,{$set:{owned: false}});
+      } else {
+        Meteor.call('addComic', this._id, this.appearanceName, this.volNo, function(error, user){console.log(user.comics)});
+        Volumes.update(this._id, {$set:{owned: true}});
+      }
+    },
+  });
+  Template.signup.events({
+    "submit #signUpForm": function(e,t){
+      e.preventDefault();
+      var username = e.target.username.value;
+      var password = e.target.password.value;
+      var email = e.target.email.value;
+      Accounts.createUser({
+        username: username,
+        password: password,
+        email: email,
+        comics: []
+      }, function(err){
+        if(err){
+          console.log('You are not logged in');
+        
+      } else {
+        $('#signUpForm').modal('hide');
+      }
+
+    });
+   },
+    'blur input': function(event){
+      if(event.target.value===''){
+        $(event.target).next('span').show();
+      }
+    },
+    'focus input': function(event){
+      $(event.target).next('span').hide();
+    },
+    "click a.close": function(){
+      $('#signUpForm').modal('hide');
+    }
+ });
+    Template.login.events({
+    "submit #logInForm": function(e,t){
+      e.preventDefault();
+      var unam = e.target.username.value;
+      var password = e.target.password.value;
+      Meteor.loginWithPassword(unam,password,function(err){
+        if(err){
+          alert("Wrong Credentials");
+        } else {
+          $('#logInForm').modal('hide');
+        }
+      });
     },
     'blur input': function(event){
       if(event.target.value===''){
@@ -79,37 +239,72 @@ if (Meteor.isClient) {
       $(event.target).next('span').hide();
     }
   });
-
-/*  Template.popUpForm.events({
-    'click button.close': function(){
-      $('#newComic').modal('hide');
-      $('input.inputField').each(function(){
-        $(this).val('');
+  Template.logout.events({
+    "submit #logOutForm": function(e,t){
+      e.preventDefault();
+      Meteor.logout(function(err){
+        if (err){
+          alert("Unable to logout");
+        }
+        else{
+          $('#logOutForm').modal('hide');
+        }
       });
-    } 
-  });*/
+    },
+    "click .cancel": function(e){
+      e.preventDefault();
+      $('#logOutForm').modal('hide');
+    }
+  });
+  Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
+  });
 }
+Meteor.methods({
+  addComic: function(id, title, volume){
+    Meteor.users.update(Meteor.userId(),{$addToSet: {comics: [id, title, volume]}});
+    return Meteor.user();
+  },
+  removeComic: function(id, title, volume){
+    Meteor.users.update(Meteor.userId(), {$pull: {comics: [id, title, volume]}});
+    return Meteor.user();
+  }
+});
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
   });
-  Meteor.publish("comics", function(){
-    return Comics.find();
+  Meteor.publish("heroes",function(thisPublisher){
+    return Heroes.find({publisher: thisPublisher});
   });
-  Meteor.publish("publishers",function(thisPublisher){
-    return Comics.find({publisher: thisPublisher});
+  Meteor.publish("publishers",function(){
+    return Publishers.find();
   });
   Meteor.publish('all-volumes', function(thisHero){
-    return Comics.find({superhero: thisHero});
+    return Volumes.find({heroName: thisHero});
+  });
+  Meteor.publish('this-vol', function(thisHero){
+    return Volumes.find({heroName: thisHero});
+  });
+  Meteor.publish('user-owned', function(){
+    return UserVolumes.find();
+  });
+  Meteor.publish('userByUsername', function(username){
+    return Meteor.users.find({username:username});
+    return UserVolumes.find({username: username});
+  });
+  Accounts.onCreateUser(function(options,user){
+    user.comics = [];
+    return user;
   });
 }
 Router.route('/', {
   name: 'home',
   waitOn: function(){
-    return Meteor.subscribe("comics");
+    return Meteor.subscribe("publishers");
   }, 
   data: function(){
-    return Comics.find();
+    return Publishers.find();
   },
   action: function(){
     if(this.ready()){
@@ -117,13 +312,38 @@ Router.route('/', {
     }
   }
 });
+Router.route('/user/:username', function(){
+  this.wait(Meteor.subscribe('userByUsername',this.params.username));
+  if (this.ready()){
+    this.render('UserDetails', {
+      data: function(){
+        return Meteor.users.findOne({username: this.params.username});
+      }
+    });
+  }
+});
+Router.route('/signup',{
+  action: function(){
+    this.render('signup')
+  }
+});
+Router.route('/login',{
+  action: function(){
+    this.render('login')
+  }
+});
+Router.route('/logout',{
+  action: function(){
+    this.render('logout')
+  }
+});
 Router.route('/:publisher',{
   name: "publisher",
   waitOn: function(){
-    return Meteor.subscribe("publishers", this.params.publisher);
+    return Meteor.subscribe("heroes", this.params.publisher);
   },
   data: function(){
-    return Comics.find();
+    return Heroes.find();
   },
   action: function(){
     if(this.ready()){
@@ -134,13 +354,13 @@ Router.route('/:publisher',{
     }
   }
 });
-Router.route('/:publisher/:superhero',{
-  name: "superhero",
+Router.route('/:publisher/:heroName',{
+  name: "heroName",
   waitOn: function(){
-    return Meteor.subscribe("comics");
+    return Meteor.subscribe("heroes", this.params.publisher);
   },
   data: function(){
-    return Comics.findOne({superhero: this.params.superhero});
+    return Heroes.findOne({heroName: this.params.heroName});
   },
   action: function(){
     if(this.ready()){
@@ -151,12 +371,37 @@ Router.route('/:publisher/:superhero',{
     }
   }
 });
-Router.route('/:publisher/:superhero/:volnumb',{
-  name: 'volume',
+Router.route('/:publisher/:heroName/all-volumes',{
+  name: 'all-volumes',
   waitOn: function(){
-    return Meteor.subscribe("comics");
+    return Meteor.subscribe("all-volumes", this.params.heroName);
   },
   data: function(){
-    return Comics.findOne({});
+    return Volumes.findOne({});
+  },
+  action: function(){
+    if(this.ready()){
+      this.render("AllVolumes");
+    }
+    else{
+      console.log("loading");
+    }
+  }
+});
+Router.route('/:publisher/:heroName/:volNo',{
+  name: 'volumeDetails',
+  waitOn: function(){
+    return Meteor.subscribe("this-vol", this.params.heroName, this.params.volNo);
+  },
+  data: function(){
+    return Volumes.findOne({volNo: this.params.volNo});
+  },
+  action: function(){
+    if(this.ready()){
+      this.render("volume-details");
+    }
+    else{
+      console.log("loading");
+    }
   }
 });

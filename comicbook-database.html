@@ -9,51 +9,77 @@
 </body>
 
 <template name="Home">
-  <div id="full-bg">
-    <img src=""/>
+  <div class="cont right">
+    <div id="full-bg">
+    </div>
   </div>
-  <div id="cont">
+  <div class="cont left">
     <div id="publisher-list">
-      <h1 class="title"><span>Publisher List</span><span class="directions">[ scroll down and pick a publisher ]</span></h1>
-      <div class="nav">
-      	<ul>
-      		{{#each publishers}}
+    {{> userChoices}}
+    <h1 class="title"><span>Publisher List</span><span class="directions">[ scroll down and pick a publisher ]</span></h1>
+    <div class="nav">
+        <ul>
+        {{#each publishers}}
       			<li><a href="{{pathFor route='publisher' publisher=publisher}}">{{publisher}}</a></li>
-      		{{/each}}
+        {{/each}}
       	</ul>
         </div>
-        <div class="button"><button type="button" data-toggle="modal" data-target="#newComicForm" class="newHeroButton">Add New Comic</button></div>
-      </div>
-      {{> popUpForm}}
-    </div>
+        <div class="button"><button type="button" data-toggle="modal" data-target="#newPublisherForm" class="newHeroButton">Add New Publisher</button></div>
+     </div>
+     </div>
+      {{> PublisherForm}}
 </template>
 
 <template name="Publisher">
-  <div id="full-bg">
-    <img src=""/>
+  <div class="cont right">
+    <div id="full-bg">
+    </div>
   </div>
-	<ul id="heroes">
-	{{#each hero}}
-		<li>
-      <a href="{{pathFor route='superhero' superhero=superhero}}">
-        <img src="{{heroHeadShot}}" class="grayscale"/>
-        <span>{{superhero}}</span>
-      </a>
-    </li>
-	{{/each}}
-	</ul>
+  <div class="cont left">
+  <div id="heroes-list">
+    {{> userChoices}}
+    <h1 class="title"><span>Hero List</span><span class="directions">[ scroll down and pick a hero ]</span></h1>
+    <div id="heroes">
+    	<ul>
+    	{{#each hero}}
+    		<li>
+          <span>{{heroName}}</span><span class="links"><a href="{{pathFor route='heroName' publisher=publisher heroName=heroName}}">Details</a> <a href="{{pathFor route='all-volumes' publisher=publisher heroName=heroName}}">All Volumes</a></span>
+        </li>
+    	{{/each}}
+    	</ul>
+      </div>
+      <div class="button"><button type="button" data-toggle="modal" data-target="#newHeroForm" class="newHeroButton">Add New Superhero</button></div>
+    </div>
+    </div>
+    {{> HeroForm}}
 </template>
-<template name="NewComic">
-	<form class="newComic">
+<template name="NewPublisher">
+	<form class="newPublisher">
     	<label for="publisher">Publisher: </label><input type="text" name="publisher" placeholder="Publisher Name" class="inputField" /><span class="required">Required</span>
-    	<label for="superhero">Superhero Name: </label><input type="text" name="superhero" placeholder="Superhero Name" class="inputField" /><span class="required">Required</span>
-      <label for="heroheadshot">Superhero Image: </label><input type="text" name="heroheadshot" placeholder="Image of the superhero's face" class="inputField"/><span class="required">Required</span>
-      <label for="imgDescript">Image Description: </label><input type="text" name="imgDescript" placeholder="e.g. Cover for Issue #1" class="inputField"/><span class="required">Required</span>
-      <input type="submit" name="submitNewHero" id="submit-new-hero" value="Add Superhero"/><button type="button" id="btn-close" class="btn btn-default" data-dismiss="modal">Close</button>
+    	<label for="publisherimg">Publisher Image: </label><input type="text" name="publisherimg" placeholder="i.e. Group photo, comic war, etc." class="inputField" /><span class="required">Required</span>
+      <input type="submit" name="submitNewPublisher" id="submit-new-publisher" value="Add Publisher"/><a href="#" id="btn-close" class="btn button-close btn-default" data-dismiss="modal">Close</a>
 	</form>
 </template>
-<template name="popUpForm">
-	 <div id="newComicForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<template name="NewHero">
+  <form class="newHero">
+      <label for="heroName">Superhero: </label><input type="text" name="superhero" placeholder="Superhero Name" class="inputField" /><span class="required">Required</span>
+      <label for="heroImg">Superhero Image: </label><input type="text" name="superheroimg" placeholder="i.e. Head shot, action shot, etc." class="inputField" /><span class="required">Required</span>
+      <label for="herorealname">Real Name: </label><input type="text" name="herorealname" placeholder="Hero's real name" class="inputField" /><span class="required">Required</span>
+      <label for="herodetails">Hero Details: </label><input type="text" name="herodetails" placeholder="i.e. quips, catch phrases, favorite foods" class="inputField" /><span class="required">Required</span>
+      <input type="submit" name="submitNewHero" id="submit-new-hero" value="Add Superhero"/><a href="#" id="btn-close" class="btn button-close btn-default" data-dismiss="modal">Close</a>
+  </form>
+</template>
+<template name="NewAppearance">
+  <form class="newAppearance">
+      <label for="appearanceName">Volume Name: </label><input type="text" name="appearanceName" placeholder="Appearance Volume Name, Issue Name, Book Name, etc." class="inputField" /><span class="required">Required</span>
+      <label for="volNo">Volume Number: </label><input type="text" name="volNo" placeholder="Appearance Volume Number" class="inputField" /><span class="required">Required</span>
+      <label for="coverart">Volume Cover Art: </label><input type="text" name="coverart" placeholder="Cover Art URL" class="inputField" />
+      <label for="synopsis">Synopsis: </label><input type="text" name="synopsis" placeholder="A brief description on the volume" class="inputField" /><span class="required">Required</span>
+      <input type="submit" name="submitNewHero" id="submit-new-hero" value="Add Superhero"/><a href="#" id="btn-close" class="btn button-close btn-default" data-dismiss="modal">Close</a>
+  </form>
+</template>
+<template name="PublisherForm">
+	 <div id="newPublisherForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -61,19 +87,224 @@
         <h4 class="modal-title" id="myModalLabel"></h4>
       </div>
       <div class="modal-body">
-      {{> NewComic}}
+      {{> NewPublisher}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="signUpForm">
+   <div id="signUpForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> signup}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="logInForm">
+   <div id="logInForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> login}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="logOutForm">
+   <div id="logOutForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> logout}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="HeroForm">
+   <div id="newHeroForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> NewHero}}
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+<template name="AppearanceForm">
+   <div id="newAppearanceForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+      {{> NewAppearance}}
       </div>
     </div>
   </div>
 </div>
 </template>
 <template name="Hero">
-	<ul>
-		<li>Superhero: {{superhero}}</li>
-		<li>Publisher: {{publisher}}</li>
-    <li><a href="{{pathFor route='appearancelist' superhero=superhero}}">View All Appearances</a></li>
-	</ul>
+  <div class="cont right">
+    <div id="full-bg" style="background: url({{heroImg}}); background-size: cover; background-position: top center">
+    </div>
+  </div>
+  <div class="cont left">
+    <div id="hero-details">
+      <h1 class="title"><span class="name">{{heroName}}</span></h1>
+      <div id="details">
+        <ul>
+      		<li class="capitalize"><strong>Superhero Name</strong>: {{heroName}}</li>
+          <li><strong>Real Name</strong>: {{heroRealName}}</li>
+      		<li><strong>Publisher</strong>: {{publisher}}</li>
+          <li><strong>Hero Details</strong>: {{heroDetails}}</li>
+          <li class="button"><a href="{{pathFor route='all-volumes' publisher=publisher heroName=heroName}}">View All Appearances</a></li>
+      	</ul>
+      </div>
+    </div>
+  </div>
 </template>
-<template name="appearancelist">
-  <a href="">Add More Appearances</a>
+<template name="AllVolumes">
+  <div class="cont right">
+    <div id="full-bg">
+    </div>
+  </div>
+  <div class="cont left">
+    <div id="allvolumes">
+    {{> userChoices}}
+    <h1 class="title"><span>Appearances</span><span class="directions">[ scroll down and pick a hero ]</span></h1>
+    <div id="appearancelist">
+    <ul>
+    {{#each volumes}}
+        <li>
+          <span>{{appearanceName}}</span><span class="links"><a href="{{pathFor route='volumeDetails' volNo=volNo appearanceName=appearanceName heroName=heroName publisher=publisher}}">Details</a>
+            {{#if currentUser}}
+              {{#if owned}}
+                <a class="is-it-owned" href="#">Mark as Not Owned</a>
+              {{else}}
+                <a class="is-it-owned" href="#">Mark as Owned</a>
+              {{/if}}
+            {{/if}}
+            </span>
+        </li>
+      {{/each}}
+      </ul>
+      </div>
+      <div class="button"><button type="button" data-toggle="modal" data-target="#newAppearanceForm" class="newHeroButton">Add Appearance</button></div>
+      </div>
+      </div>
+      {{> AppearanceForm}}
+</template>
+<template name="userChoices">
+    {{#if currentUser}}
+      <div id="addt-links">//<a href="/user/{{currentUser.username}}">{{currentUser.username}}</a><button type="button" id="logout-btn" data-toggle="modal" data-target="#logOutForm" class="account-link">Log Out</button></div>
+      {{> logOutForm}}
+    {{else}}
+      <div id="addt-links">//<button type="button" id="login-btn" data-toggle="modal" data-target="#logInForm" class="account-link">Login</button><button type="button" data-toggle="modal" id="signup-btn" data-target="#signUpForm" class="account-link">Sign Up</button></div>
+      {{> logInForm}}
+      {{> signUpForm}}
+    {{/if}}
+</template>
+<template name="signup">
+  <h2>Sign Up</h2>
+  <form id="signUpForm">
+  <label for="username">Username</label>
+  <input type="text" id="register-username" name="username" placeholder="Username"/>
+  <br/>
+  <label for="email">E-mail</label>
+  <input type="text" id="register-email" name="email" placeholder="user@email.com"/>
+  <br/>
+  <label for="password">Password</label>
+  <input type="text" id="register-password" name="password" placeholder="Password">
+  <br/>
+  <button class="btn-submit" id="signup" type="submit">Submit</button>
+  </form>
+</template>
+<template name="login">
+  <h2>Log In</h2>
+  <form id="logInForm">
+  <label for="username">Username</label>
+  <input type="text" id="login-username" name="username" placeholder="Username"/>
+  <br/>
+  <label for="password">Password</label>
+  <input type="text" id="login-password" name="password" placeholder="Password"/>
+  <br/>
+  <button type="submit" class="btn-submit">Submit</button>
+  <a href="/forgotpassword">Forgot Password?</a>
+  </form>
+</template>
+<template name="logout"> 
+  <h2 class="title">Logout</h2>
+  <form id="logOutForm">
+    <p>Would you like to log out of {{currentUser.username}}?</p>
+    <div class="align middle">
+      <button type="submit" class="submit logout-btn">Yes</button>
+      <a href="#" class="cancel logout-btn">No</a>
+    </div>
+  </form>
+</template>
+<template name="volume-details">
+    <div id="vol-details" class="cont right">
+    <div id="full-bg">
+      <img src="{{coverart}}"/>
+    </div>
+  </div>
+  <div class="cont left">
+    <div id="hero-details">
+      <h1 class="title"><span class="name">{{heroName}}</span></h1>
+      <div id="details">
+        <ul>
+          <li><strong>Publisher</strong>: {{publisher}}</li>
+          <li class="capitalize"><strong>Appearance in</strong>: {{appearanceName}}</li>
+          <li><strong>Issue/Book Number</strong>: {{volNo}}</li>
+          <li><strong>Synopsis</strong>: {{synopsis}}</li>
+          <li class="button"><a href="{{pathFor route='all-volumes' publisher=publisher heroName=heroName}}">View All Appearances</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+<!--template name="username">
+  {{#if currentUser}}
+  <h1 class="title">{{currentUser.username}}'s Comicbooks</h1>
+    {{#each volumes}}
+    <ul>
+      <li>{{appearanceName}}</li>
+      <li>{{volNo}}</li>
+      <li>{{heroName}}</li>
+    </ul>
+    {{/each}}
+  {{else}}
+  <p>You are not logged in</p>
+  {{/if}}
+</template-->
+<template name="UserDetails">
+  <h1 class="title">{{username}}</h1>
+  <ul>
+
+  </ul>
 </template>
